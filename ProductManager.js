@@ -56,16 +56,18 @@ const getid = () => {
 }
 const productos = new ProductManager()
 
-let producto = {title:'hola',description:'jsddsja',imagen:'imagenprueba1'precio:200, code:332,id:getid()}
+let producto = {title:'hola',description:'jsddsja',imagen:'imagenprueba1',precio:200, code:332,id:getid()}
 
-let producto3 = {title:'hola3',precio:2003, description:'jsddsja',imagen:'imagenprueba2'code:331,id:getid()}
-let producto2 = {title:'holaaaaa222222222aa',description:'jsddsja',imagen:'imagenprueba3'precio:200223, code:333,id:getid()}
+let producto3 = {title:'hola3',precio:2003, description:'jsddsja',imagen:'imagenprueba2',code:331,id:getid()}
+let producto2 = {title:'holaaaaa222222222aa',description:'jsddsja',imagen:'imagenprueba3',precio:200223, code:333,id:getid()}
 
-let TotalProd = await productos.getProducts();
-console.log(TotalProd)
-productos.addProduct(producto);
+//let TotalProd = await productos.getProducts();
+//console.log(TotalProd)
+//productos.addProduct(producto);
 
 
 //let prod = await productos.updateProduct(2, producto3)
 //let prod = await productos.deleteProduct(5)
 //console.log(prod)
+
+export default ProductManager;
