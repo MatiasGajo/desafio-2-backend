@@ -26,15 +26,22 @@ class ProductManager {
         return productoId;
     }
 
-    async updateProduct(id, prod) {
+    async updateProduct(id, algo) {
+        let producto;
         let cont = await fs.promises.readFile(this.path);
         let products = JSON.parse(cont);
         let indice = products.findIndex(prod => prod.id === id);
-        if(indice !== -1){
-            products[indice] = prod;
+        if(indice == -1){
+            return producto;
         }
+        products[indice].title = algo.title;
+        products[indice].description = algo.description;
+        products[indice].stock = algo.stock;
+        products[indice].category = algo.category;
+        products[indice].code = algo.code;
+        producto = products[indice]
         await fs.promises.writeFile(this.path, JSON.stringify(products))
-        return {msj: 'prod actualizado con exito!'}
+        return producto;
     }
 
     async deleteProduct(id){
@@ -49,7 +56,7 @@ class ProductManager {
 
 }
 
-const getid = () => {
+export const getid = () => {
     let a = Date.now().toString(30)
     let b = Math.random().toString(30).substring(2)
     return a + b
