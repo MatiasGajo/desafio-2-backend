@@ -5,6 +5,7 @@ import handlebars from 'express-handlebars';
 import viewsRouter from './routes/views.js';
 import { Server } from 'socket.io';
 import ProductManager from "./ProductManager.js";
+import { getid } from "./ProductManager.js";
 const app = express();
 
 app.engine('handlebars', handlebars.engine());
@@ -34,6 +35,8 @@ socketServer.on('connection', async socket => {
         socketServer.emit('log',data)
     })
     socket.on('product', async newProd => {
+        newProd.id = getid();
+        newProd.status = true;
         let newProduct = await manager.addProduct(newProd)
         const products = await manager.getProducts()
         socketServer.emit('productList', products)
