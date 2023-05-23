@@ -1,0 +1,42 @@
+<div>
+  <h1>Agrega tu producto</h1>
+  <div>
+    <form action="/api/products" method="post">
+    <label>Titulo</label>
+    <input name="title" id="title">
+    <br>
+    <label>Descripcion</label>
+    <input name="description" id="description">
+    <br>
+        <label>Precio</label>
+    <input name="precio" type="number" id="price">
+    <br>
+        <label>foto</label>
+    <input name="img" id="img">
+    <br>
+    <label>Codigo</label>
+    <input name="code" id="code">
+    <br>
+        <label>stock</label>
+    <input name="stock" id="stock">
+    <br>
+    </form>
+  </div>
+  <input type="button" id="addProd" value="Agregar Producto">
+  <div>
+    <h3>Elimina el producto</h3>
+    <form action="/api/products/:id" method="delete">
+    <label> Id del producto a eliminar</label>
+    <input name="id" id="id" placeholder="Id del producto">
+    <br>
+    </form>
+    <input type="button" id="deleteProd" value="eliminar producto">
+  </div>
+  <div>
+    <h3>Lista de productos</h3>
+    <p id="productList"></p>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../public/js/index.js"></script>

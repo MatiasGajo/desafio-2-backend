@@ -25,17 +25,26 @@ class CartManager {
         return newCart;
     }
 
-    async addProdToCart(cid, id){
+    async addProdToCart(cid, id, quantity = 1){
         let carrito;
         let carritos = await this.getCart();
         let index = carritos.findIndex(cart => cart.id == cid)
         if (index == -1){
             return carrito;
         }
-        carritos[index].products.push(id)
+        let cartProducts = carritos[index].products;
+        let productIndex = cartProducts.findIndex(product => product.id == id);
+        if (productIndex == -1) {
+            cartProducts.push({ id: id, quantity: quantity });
+        } else {
+            cartProducts[productIndex].quantity += quantity;
+        }
+        
+      
         await fs.promises.writeFile(this.path, JSON.stringify(carritos))
         return carritos[index];
     }
+    
 }
 
 
