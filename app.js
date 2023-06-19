@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import productRouter from './routes/product.js';
 import cartRouter from './routes/cart.js';
 import handlebars from 'express-handlebars';
@@ -6,7 +7,12 @@ import viewsRouter from './routes/views.js';
 import { Server } from 'socket.io';
 import ProductManager from "./ProductManager.js";
 import { getid } from "./ProductManager.js";
+import Prouter from "./routes/Prouter.js";
 const app = express();
+
+mongoose.connect('mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/?retryWrites=true&w=majority')
+    .then(()=> console.log("Database Connected!"))
+    .catch(err => console.log(err))
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', './views');
@@ -18,6 +24,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter);
 app.use('/api/hbs', viewsRouter);
+app.use('/api/p', Prouter)
 
 const manager = new ProductManager()
 const PORT = 8080;
