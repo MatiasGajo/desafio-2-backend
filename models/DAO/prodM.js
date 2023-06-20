@@ -27,21 +27,14 @@ class PManager {
     return P;
  }
 
- async addP(title, description, code, price, stock, category){
-    let P;
+ async addP(P){
+    let crearP;
     try {
-        P = await this.model.create({
-            title,
-            description,
-            code,
-            price,
-            stock,
-            category
-        });
+        crearP = await this.model.create(P);
     } catch (error) {
         console.log(error);
     }
-    return P;
+    return crearP;
  }
 
  async updateP(pid, properties){
@@ -53,6 +46,43 @@ class PManager {
     }
     return P;
  }
+
+ async deleteP(pid){
+    let P;
+    try {
+        P = this.model.deleteOne({_id: pid})
+    } catch (error) {
+        console.log(error)
+    }
+
+    return P;
 }
+
+async getCategory(query) {
+    let category;
+    try {
+        category = this.model.find({category: query})
+    } catch (error) {
+        console.log(error)
+    }
+    return category;
+}
+
+async getSort(sor) {
+    let response;
+    try {
+        if (sor == "asc"){
+           response = await this.model.find().sort({price:-1})
+        }else {
+           response = await this.model.find().sort({price:1})
+        } 
+    } catch (error) {
+        console.log(error)
+    }
+    return response
+}
+}
+
+
 
 export default PManager;
