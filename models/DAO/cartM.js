@@ -1,4 +1,5 @@
 import { cartsmodel } from "../cart.model.js";
+import { Productsmodel } from "../prod.model.js";
 
 class CManager{
     constructor(){
@@ -21,7 +22,7 @@ class CManager{
     async getCartById(cid){
         let cart;
         try {
-            cart = await this.model.findOne({_id: cid})
+            cart = await this.model.find({_id: cid}).populate('products')
         } catch (error) {
             console.log(error);
         }
@@ -29,27 +30,92 @@ class CManager{
         return cart;
     }
 
-    async addProductToCart(cid, pid){
-        let cart;
-        let carrito;
-        let product = {
-            id: pid,
-            quantity: 1
-        }
-        try {
-            cart = await this.model.findOne({_id: cid})
-            let newCart = cart.products.findIndex(elem => elem.id.toString() === pid)
-            if (newCart == -1) {
-                carrito = await this.model.updateOne({_id: cid}, {$push: {products: product}})  
+    addProductInCart = async (cid, pid) => {
+        const cart = await cartsmodel.findOne({ _id: cid }).lean(); 
+        const producto = await Productsmodel.findOne({ _id: pid }) 
 
-            }else{
-                cart.quantity++
-                carrito = await this.model.updateOne({_id: cid}, {products: cart})
-                await cart.save()
-            } 
-        } catch (error) {
-            console.log(error);
+        if (cart && producto) {
+            const index = cart.products.findIndex(product => product.producto == pid);
+            if (index != -1) {
+                let total = cart.products[index].quantity
+                cart.products[index].quantity = total + 1;
+            } else {
+                cart.products.push({ producto: pid, quantity: 1 });
+            }
+
+            const result = await cartsmodel.updateOne({ _id: cid }, { $set: cart }).lean();
+
+            return ({
+                code: 200,
+                status: 'success',
+                message: cart.products
+            })
+        } else {
+            return ({
+                code: 400,
+                status: 'Error',
+                message: 'Hubo un error al agregar el producto'
+            })
         }
+    }
+
+
+    deleteProductInCart = async (cid, pid) => {
+        const cart = await cartsmodel.findOne({ _id: cid }); 
+
+        const index = cart.products.find(producto => producto._id == pid);
+
+        
+        if (index != -1) {
+            cart.products.splice(index, 1);
+        } else {
+            return ({
+                code: 400,
+                status: 'Error',
+                message: 'No existe el producto'
+            })
+        }
+
+        const result = await cartsmodel.updateOne({ _id: cid }, { $set: cart })
+        return ({
+            code: 200,
+            status: 'Success',
+            message: `Producto eliminado correctamente `
+        })
+    }
+
+    modCantidad = async (cid, pid, cantidad) => {
+        const cart = await cartsmodel.findOne({_id: cid});
+        const index = cart.products.findIndex(product => product.producto == pid)
+
+        if (index != -1){
+            cart.products[index].quantity = cantidad
+        }else{
+            return ({
+                code: 400,
+                status: 'Error',
+                message: 'No existe el producto'
+            })
+        }
+        const result = await cartsmodel.updateOne({_id: cid}, {$set: cart})
+
+        return ({
+            code: 200,
+            status: 'Success',
+            message: `Cantidad modificada `
+        })
+    }
+
+    visualizarProd = async (cid) => {
+        const cart = await cartsmodel.findOne({_id: cid})
+        const prods = cart.products.map(elem => {
+            return {
+                _id: elem.producto,
+                cantidad: elem.quantity
+                
+            }
+        })
+        return prods;
     }
 
 

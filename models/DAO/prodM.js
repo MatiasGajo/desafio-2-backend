@@ -5,14 +5,29 @@ class PManager {
         this.model = Productsmodel;
     }
 
- async getP(){
+ async getP(pageBody, limit, cat, sort){
     let prods;
-    try {
-      prods = await this.model.find()
-    } catch (error) {
-        console.log(error)
+    let options = {
+        page: pageBody,
+        limit: limit,
+        sort: { price: sort === "desc" ? -1 : 1}
+    }
+    let query = {}
+
+    if (cat) {
+        query.category = cat
     }
 
+    let noFiltersProvided = !pageBody && !limit && !cat && !sort;
+    try {
+        if (noFiltersProvided) {
+            prods = await this.model.find();
+        }else {
+            prods = await this.model.paginate(query, options)
+        }
+    }catch(error){
+        console.log(error)
+    }
     return prods;
  }
 
@@ -80,6 +95,21 @@ async getSort(sor) {
         console.log(error)
     }
     return response
+}
+
+async visualizarProds() {
+    let prods = await this.model.find().paginate('products')
+    let prod = prods.map(elem => {
+        return {
+            title: elem.title,
+            description: elem.description,
+            id: elem._id,
+            price: elem.price,
+            stock: elem.stock,
+            category: elem.category
+        }
+    })
+    return prod
 }
 }
 

@@ -19,6 +19,7 @@ Crouter.get("/:cid", async (req, res)=>{
     let product;
     try {
       product = await manager.getCartById(cid);
+      console.log(JSON.stringify(product, null, '\t'))
     } catch (error) {
       res.status(400).send({ status: "error", msg: "Producto no encontrado" }) 
     }
@@ -26,52 +27,28 @@ Crouter.get("/:cid", async (req, res)=>{
 });
 
 Crouter.post("/:cid/products/:pid", async(req, res)=>{
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    let addProduct;
-    try {
-      addProduct = await manager.addProductToCart(cid, pid)
-    } catch (error) {
-      res.status(400).send({ status: "error", msg: "Producto no encontrado" })
-    }
-    res.send({ status: "success", msg: "Producto agregado"})
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const productCart = await manager.addProductInCart(cid, pid);
+
+    res.status(productCart.code).send({ status: productCart.status, message: productCart.message });
 })
 
 Crouter.delete("/:cid/products/:pid", async(req, res)=> {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-
-    let carrito = await manager.getCartById(cid);
-    if(!carrito){
-        res.status(400).send({status: "error", msg:"Carrito no encontrado"})
-    }
-
-    let prodIndex = carrito.products.findIndex(producto => producto.pid == pid)
-    if(prodIndex == -1){
-        res.status(400).send({status: "error", msg:"Producto en el carrito no encontrado"})
-    }
-    carrito.products.splice(prodIndex,1)
-    await carrito.save()
-    res.send({status: "success", msg:"Producto eliminado del carrito"})
-})
-
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const result = await manager.deleteProductInCart(cid, pid);
+    
+    res.status(result.code).send({ status: result.status, message: result.message });
+    })
 
 Crouter.put("/:cid/products/:pid", async(req,res)=>{
     let cid = req.params.cid;
     let pid = req.params.pid;
     let {cantidad} = req.body;
 
-    let carrito = await manager.getCartById(cid)
-    if(!carrito){
-        res.status(400).send({status: "error", msg:"Carrito no encontrado"})
-    }
-
-    let producto = carrito.products.find(producto => producto.id.toString() == pid)
-    if(!producto){
-        res.status(400).send({status: "error", msg:"Producto en el carrito no encontrado"})
-    }
-    producto.quantity = parseInt(cantidad)
-    await carrito.save()
+    let result = await manager.modCantidad(cid, pid, cantidad)
+    res.status(result.code).send({ status: result.status, message: result.message })
 })
 
 
