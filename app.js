@@ -9,22 +9,28 @@ import ProductManager from "./ProductManager.js";
 import { getid } from "./ProductManager.js";
 import Prouter from "./routes/Prouter.js";
 import Crouter from "./routes/Crouter.js";
+import __dirname from "./utils.js"
 const app = express();
 
 mongoose.connect('mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/Coder?retryWrites=true&w=majority')
     .then(()=> console.log("Database Connected!"))
     .catch(err => console.log(err))
 
-app.engine('handlebars', handlebars.engine());
-app.set('views', './views');
-app.set('view engine', 'handlebars')
-app.use(express.static('public'))
-app.use(express.json())
-app.use(express.urlencoded({extended: true}));
+
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.static(__dirname + "/public"))
+    
+    app.engine("handlebars", handlebars.engine());
+    
+    app.set("views", __dirname + "/views");
+    app.set("view engine", "handlebars");
+    
 
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter);
-app.use('/api/hbs', viewsRouter);
+app.use("/", viewsRouter)
+
 app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
 
@@ -34,7 +40,7 @@ const httpServer = app.listen(PORT, () => {
     console.log('server iniciado')
 })
 httpServer.on('error', error => console.log(error))
-const socketServer = new Server(httpServer)
+export const socketServer = new Server(httpServer)
 
 socketServer.on('connection', async socket => {
     console.log('Nuevo socket conectado');
