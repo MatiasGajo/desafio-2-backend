@@ -5,10 +5,12 @@ import CManager from '../models/DAO/cartM.js';
 import PManager from '../models/DAO/prodM.js';
 import { Productsmodel } from '../models/prod.model.js';
 import { socketServer } from '../app.js';
+import UserManager from '../models/DAO/userM.js';
 const viewsRouter = Router()
 const manager = new ProductManager()
 const cart = new CManager();
 const prod = new PManager();
+const userM = new UserManager()
 
 
 viewsRouter.get('/', (req, res) => {
@@ -61,6 +63,53 @@ viewsRouter.delete('/realtimeproducts/:pid', async (req, res) => {
     socketServer.emit("productdelete", productos)
 })
 
+viewsRouter.get('/register',(req, res) => {
+    res.render('register',{})
+})
 
+viewsRouter.post('/register', async (req, res) => {
+    let user = req.body
+    let userFound = await userM.getByEmail(user.email)
+    if(userFound){
+        res.render('register-error',{})
+    }
+    let result = await userM.createUser(user)
+    console.log(result)
+    res.render('login', {})
+})
+
+viewsRouter.get('/login', (req, res) => {
+    res.render('login', {})
+})
+
+viewsRouter.post('/login', async (req, res) => {
+    let user = req.body
+    let users = await userM.getAll()
+    let userFound = users.find(u =>{
+        return u.email == user.email && u.password == user.password
+    })
+    if(userFound){
+        console.log(userFound)
+        req.session.user = user.email
+        if(userFound.rol == 'admin'){
+            res.redirect('/realtimeproducts')
+        }else{
+            res.redirect('/profile')
+        }
+    }else{
+        res.render('login-error',{})
+    }
+})
+
+viewsRouter.get('/logout',(req, res) => {
+    req.session.destroy(error => {
+        res.render('login')
+    })
+})
+
+viewsRouter.get('/profile', async (req, res) => {
+    let user = await userM.getByEmail(req.session.user)
+    res.render('datos', {user})
+})
 
 export default viewsRouter;

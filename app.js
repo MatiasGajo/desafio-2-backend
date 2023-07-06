@@ -9,8 +9,29 @@ import ProductManager from "./ProductManager.js";
 import { getid } from "./ProductManager.js";
 import Prouter from "./routes/Prouter.js";
 import Crouter from "./routes/Crouter.js";
-import __dirname from "./utils.js"
+import __dirname from "./utils.js";
+import session from "express-session";
+import FileStore from "session-file-store";
+import MongoStore from "connect-mongo";
 const app = express();
+
+const fileStorage = FileStore(session)
+
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: 'mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/Coder?retryWrites=true&w=majority',
+        mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
+        ttl: 500
+    }),
+    secret: 'esteesmisecret',
+    resave: false,
+    saveUninitialized: false,
+}))
+
+app.get('/', (req, res ) => {
+    req.session.user = 'admin';
+    res.send('ok')
+})
 
 mongoose.connect('mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/Coder?retryWrites=true&w=majority')
     .then(()=> console.log("Database Connected!"))
