@@ -27,6 +27,17 @@ async getByEmail(email) {
     return result;
 }
 
+async getById(id) {
+    let result;
+    try {
+        result = await this.model.findOne({ _id: id })
+    } catch (error) {
+        console.log(error)
+    }
+
+    return result;
+}
+
 async createUser(user) {
     let result;
     try {
@@ -35,6 +46,16 @@ async createUser(user) {
         console.log(error)
     }
 
+    return result;
+}
+
+async updateUser(email, newPassword){
+    let result;
+    try {
+        result = await this.model.updateOne({email: email}, {set: {password: newPassword}})
+    } catch (error) {
+        console.log(error)
+    }
     return result;
 }
 }

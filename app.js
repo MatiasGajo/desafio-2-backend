@@ -13,6 +13,8 @@ import __dirname from "./utils.js";
 import session from "express-session";
 import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 const app = express();
 
 const fileStorage = FileStore(session)
@@ -27,6 +29,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }))
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res ) => {
     req.session.user = 'admin';

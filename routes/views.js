@@ -6,6 +6,8 @@ import PManager from '../models/DAO/prodM.js';
 import { Productsmodel } from '../models/prod.model.js';
 import { socketServer } from '../app.js';
 import UserManager from '../models/DAO/userM.js';
+import { createHash, isValidPassword } from '../utils.js';
+import passport from 'passport';
 const viewsRouter = Router()
 const manager = new ProductManager()
 const cart = new CManager();
@@ -73,6 +75,7 @@ viewsRouter.post('/register', async (req, res) => {
     if(userFound){
         res.render('register-error',{})
     }
+    user.password = createHash(user.password);
     let result = await userM.createUser(user)
     console.log(result)
     res.render('login', {})
@@ -86,7 +89,7 @@ viewsRouter.post('/login', async (req, res) => {
     let user = req.body
     let users = await userM.getAll()
     let userFound = users.find(u =>{
-        return u.email == user.email && u.password == user.password
+        return u.email == user.email && isValidPassword(u, user.password)
     })
     if(userFound){
         console.log(userFound)
@@ -109,7 +112,65 @@ viewsRouter.get('/logout',(req, res) => {
 
 viewsRouter.get('/profile', async (req, res) => {
     let user = await userM.getByEmail(req.session.user)
-    res.render('datos', {user})
+    if(user){
+        res.render('datos', {user})
+    }else{
+        res.redirect('/login')
+    }
+    
 })
+
+viewsRouter.get('/restore', (req, res )=> {
+    res.render('restore-password',{})
+})
+
+viewsRouter.post('/restore', async (req, res) => {
+    let user = req.body;
+    let userFound = await userM.getByEmail(user.email)
+    if(!userFound) {
+        res.render('register', {})
+    }else {
+        let newPassword = createHash(user.password)
+        let result = await userM.updateUser(user.email, newPassword)
+    }
+    res.render('login', {})
+})
+
+
+// PASSPORT 
+
+viewsRouter.get('/registerr', (req, res) => {
+    res.render('register',{})
+})
+
+viewsRouter.post('/registerr', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req, res) => {
+    res.render('login',{})
+})
+
+viewsRouter.get('/failregister', async (req, res) => {
+    res.render('register-error',{})
+})
+
+viewsRouter.get('/loginn', (req,res) => {
+    res.render('login',{})
+})
+
+viewsRouter.post('/loginn', passport.authenticate('login', {failureRedirect: 'faillogin'}), async (req, res) => {
+    if(!req.user) return res.render('login-error',{})
+    req.session.user = req.user.email
+    res.render('datos', {user: req.session.user})
+})
+
+viewsRouter.get('/faillogin', async (req, res) => {
+    res.render('login-error',{})
+})
+
+viewsRouter.get('/github', passport.authenticate('github',{scope: ['user:email']}), async(req, res) => {})
+
+viewsRouter.get('/githubcallback', passport.authenticate('github', {failureRedirect:'/login'}), async (req, res) => {
+    req.session.user = req.user;
+    res.redirect('/realtimeproducts')
+})
+
 
 export default viewsRouter;
