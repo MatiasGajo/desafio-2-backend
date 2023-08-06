@@ -1,23 +1,18 @@
-import { Router } from "express";
-import PManager from '../models/DAO/prodM.js';
-import { Productsmodel } from "../models/prod.model.js";
-const Prouter = Router()
-
-const manager = new PManager;
+import { getCategories, getProducts, getProductById, addProduct, updateProduct, deleteProduct } from "../services/product.js";
 
 
-Prouter.get('/', async (req,res) => {
+export const getAllProducts = async (req,res) => {
     const pageBody = req.query.page || 1;
     const limit = req.query.limit || 10;
     const cat = req.query.category;
     const sort = req.query.sort || "asc";
     try {
-        let categories = await manager.getCategory()
+        let categories = await getCategories()
         categories = categories.map((category) => ({
             name: category,
             selected: category === cat
         }))
-        let result = await manager.getP(pageBody, limit, cat, sort)
+        let result = await getProducts(pageBody, limit, cat, sort)
 
         let data = {
             prods: result.docs,
@@ -34,56 +29,53 @@ Prouter.get('/', async (req,res) => {
         console.error(error)
         res.status(500).send('Error interno')
     }
-});
+}
 
-
-Prouter.get("/:pid", async (req, res)=>{
+export const getProduct = async (req, res)=>{
     let pid = req.params.pid;
     let product;
     try {
-        product = await manager.getPById(pid)
+        product = await getProductById(pid)
     } catch (error) {
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", payload: product})
-});
+}
 
-Prouter.post("/", async (req, res)=>{
+export const createProduct = async (req, res)=>{
     let P = req.body;
     if (!P.title || !P.description || !P.code || !P.price || !P.stock || !P.category) {
         return  res.status(400).send({status: "error", error})
     }
     try {
-        await manager.addProduct(P)
+        await addProduct(P)
     } catch (error) {
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", msg: "Product creado"})
-});
+}
 
-Prouter.put("/:pid", async (req, res) => {
+export const updateProducts = async (req, res) => {
     let pid = req.params.pid;
     let P = req.body;
     if (!P.title || !P.description || !P.code || !P.price || !P.stock || !P.category) {
         return  res.status(400).send({status: "error", error})
     }
     try {
-        await manager.updateProduct(pid, P)
+        await updateProduct(pid, P)
     } catch (error) {
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", msg: "Producto updateado"})
-});
+}
 
-Prouter.delete("/:pid", async(req, res)=>{
+export const deleteProducts = async(req, res)=>{
     let pid = req.params.pid;
     let productDelete; 
     try {
-        productDelete = await manager.deleteProduct(pid);
+        productDelete = await deleteProduct(pid);
     } catch (error) {
         res.status(400).send({ status: "error", msg: "error al borrar el producto" })
     }
     res.send({ status: "success", msg: "Producto borrado"})
-})
-
-export default Prouter;
+}

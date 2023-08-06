@@ -1,31 +1,32 @@
 import express from "express";
 import mongoose from "mongoose";
-import productRouter from './routes/product.js';
-import cartRouter from './routes/cart.js';
+import productRouter from './src/routes/product.js';
+import cartRouter from './src/routes/cart.js';
 import handlebars from 'express-handlebars';
-import viewsRouter from './routes/views.js';
+import viewsRouter from './src/routes/views.js';
 import { Server } from 'socket.io';
 import ProductManager from "./ProductManager.js";
 import { getid } from "./ProductManager.js";
-import Prouter from "./routes/Prouter.js";
-import Crouter from "./routes/Crouter.js";
+import Prouter from "./src/routes/Prouter.js";
+import Crouter from "./src/routes/Crouter.js";
 import __dirname from "./utils.js";
 import session from "express-session";
 import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import initializePassport from "./config/passport.config.js";
+import initializePassport from "./src/config/passport.config.js";
+import config from "./src/config/config.js";
 const app = express();
 
 const fileStorage = FileStore(session)
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/Coder?retryWrites=true&w=majority',
+        mongoUrl: config.mongodb,
         mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
         ttl: 500
     }),
-    secret: 'esteesmisecret',
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false,
 }))
@@ -38,7 +39,7 @@ app.get('/', (req, res ) => {
     res.send('ok')
 })
 
-mongoose.connect('mongodb+srv://matiasgajo:coderhouse123@coder.dn8j0vr.mongodb.net/Coder?retryWrites=true&w=majority')
+mongoose.connect(config.mongodb)
     .then(()=> console.log("Database Connected!"))
     .catch(err => console.log(err))
 
@@ -61,7 +62,7 @@ app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
 
 const manager = new ProductManager()
-const PORT = 8080;
+const PORT = config.port || 8081;
 const httpServer = app.listen(PORT, () => {
     console.log('server iniciado')
 })

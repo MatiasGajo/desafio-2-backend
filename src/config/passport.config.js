@@ -1,8 +1,9 @@
 import passport from "passport";
 import local from 'passport-local';
 import UserManager from "../models/DAO/userM.js";
-import { createHash, isValidPassword } from "../utils.js";
-import GitHubStrategy from 'passport-github2'
+import { createHash, isValidPassword } from "../../utils.js";
+import GitHubStrategy from 'passport-github2';
+import config from "./config.js";
 
 const manager = new UserManager;
 
@@ -42,9 +43,9 @@ const initializePassport = () => {
     }))
 
     passport.use('github',new GitHubStrategy({
-        clientID:"Iv1.99bd47970da5dbe1",
-        clientSecret:"b7eb22874b9d435b1378d10be3ce73ab0437a491",
-        callbackURL:"http://localhost:8080/githubcallback",
+        clientID: config.clientID,
+        clientSecret:config.clientSecret,
+        callbackURL:config.callbackURL,
         scope: ['user:email']
     },async(accessToken,refreshToken,profile,done) => {
         try {
@@ -68,7 +69,6 @@ const initializePassport = () => {
             done(error)
         }
     }))
-
 
     passport.serializeUser((user, done) => {
         done(null, user._id)

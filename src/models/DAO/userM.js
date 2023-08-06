@@ -38,6 +38,17 @@ async getById(id) {
     return result;
 }
 
+async getBySub(sub) {
+    let result;
+    try {
+        result = await this.model.findOne({ sub })
+    } catch (error) {
+        console.log(error)
+    }
+
+    return result;
+}
+
 async createUser(user) {
     let result;
     try {
