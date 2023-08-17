@@ -1,5 +1,6 @@
-import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad } from "../services/cart.js";
-
+import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad, purchaseBuy } from "../services/cart.js";
+import { ticketsModel } from "../models/ticket.model.js";
+import { getid } from "../../ProductManager.js";
 
 export const getCart = async (req, res)=>{
     let cid = req.params.cid;
@@ -60,4 +61,10 @@ export const deleteCart = async(req, res)=>{
     await carrito.save();
     res.send({status:"success", msg:"Se han borrado todos los productos del carrito"})
 
+}
+
+export const purchaseCart = async(req,res) => {
+  let cid = req.params.cid
+  let result = await purchaseBuy(cid)
+  res.send({status: "success", payload: result})
 }

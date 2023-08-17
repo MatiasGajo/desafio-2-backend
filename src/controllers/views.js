@@ -3,6 +3,7 @@ import { socketServer } from "../../app.js";
 import { addProduct, deleteProduct } from "../services/product.js";
 import { getPro, getUser, createUsers, getAllUsers, getUserByEmail, updateUsers } from "../services/views.js";
 import { createHash, isValidPassword } from "../../utils.js";
+import UserDTO from "../models/DTO/userDTO.js";
 export const products = async (req, res) => {
     const { page = 1, limit = 4 } = req.query;
     const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await Productsmodel.paginate({}, { page, limit, lean: true });
@@ -56,7 +57,8 @@ export const registerPost = async (req, res) => {
     }
     user.password = createHash(user.password);
     let result = await createUsers(user)
-    console.log(result)
+    let resultt = new UserDTO(result)
+ //   console.log(resultt)
     res.render('login', {})
 }
 
@@ -67,9 +69,11 @@ export const loginPost = async (req, res) => {
         return u.email == user.email && isValidPassword(u, user.password)
     })
     if(userFound){
-        console.log(userFound)
+        let result = new UserDTO(userFound)
+     //   console.log(result)
         req.session.user = user.email
-        if(userFound.rol == 'admin'){
+        req.session.rol = user.rol
+        if(result.rol == 'admin'){
             res.redirect('/realtimeproducts')
         }else{
             res.redirect('/profile')
@@ -82,6 +86,7 @@ export const loginPost = async (req, res) => {
 export const profileGet = async (req, res) => {
     let email = req.session.user
     let user = await getUserByEmail(email)
+
     if(user){
         res.render('datos', {user})
     }else{

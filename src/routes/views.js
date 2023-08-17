@@ -9,6 +9,7 @@ import UserManager from '../models/DAO/userM.js';
 import { createHash, isValidPassword } from '../../utils.js';
 import passport from 'passport';
 import { productRealTimePost, products, productRealTimeGet, productRealTimeDelete, registerPost, loginPost, profileGet, restorePost } from '../controllers/views.js';
+import { isAdmin, isUser } from '../middlewares/auth.js';
 const viewsRouter = Router()
 const manager = new ProductManager()
 const cart = new CManager();
@@ -22,10 +23,10 @@ viewsRouter.get('/', (req, res) => {
     res.render('home', {cart})
 })
 
-viewsRouter.get("/products", products)
+viewsRouter.get("/products",isUser, products)
 
 
-viewsRouter.get("/realtimeproducts", productRealTimeGet)
+viewsRouter.get("/realtimeproducts",isAdmin, productRealTimeGet)
 
 viewsRouter.post('/realtimeproducts', productRealTimePost)
 

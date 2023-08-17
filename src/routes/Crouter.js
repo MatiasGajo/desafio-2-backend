@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCart, createCart, addProduct, deleteProduct, modificarCantidad, deleteCart } from "../controllers/cart.js";
+import { getCart, createCart, addProduct, deleteProduct, modificarCantidad, deleteCart, purchaseCart } from "../controllers/cart.js";
 const Crouter = Router();
 
 Crouter.post("/", createCart);
@@ -13,6 +13,8 @@ Crouter.delete("/:cid/products/:pid", deleteProduct);
 Crouter.put("/:cid/products/:pid", modificarCantidad);
 
 Crouter.delete('/:cid', deleteCart);
+
+Crouter.post("/:cid/purchase", purchaseCart)
 
 
 export default Crouter;

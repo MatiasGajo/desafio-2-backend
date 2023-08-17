@@ -1,5 +1,6 @@
 import PManager from "../models/DAO/prodM.js"
 import UserManager from "../models/DAO/userM.js";
+import UserDTO from "../models/DTO/userDTO.js";
 
 const userM = new UserManager;
 const manager = new PManager;
@@ -9,7 +10,9 @@ export const getPro = async () => {
 }
 
 export const getUser = async (email) => {
-    return await userM.getByEmail(email)
+    let user = await userM.getByEmail(email)
+    
+    return user
 }
 
 export const createUsers = async (user) => {
@@ -21,7 +24,9 @@ export const getAllUsers = async () => {
 }
 
 export const getUserByEmail = async (email) => {
-    return await userM.getByEmail(email)
+    let user = await userM.getByEmail(email)
+    let result = new UserDTO(user)
+    return result
 }
 
 export const updateUsers = async (user) => {
