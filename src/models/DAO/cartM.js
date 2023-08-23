@@ -27,7 +27,7 @@ class CManager{
             console.log(error);
         }
 
-        return cart;
+        return cart[0];
     }
 
     addProductInCart = async (cid, pid) => {

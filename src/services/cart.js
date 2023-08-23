@@ -1,8 +1,10 @@
 import CManager from "../models/DAO/cartM.js"
 import PManager from "../models/DAO/prodM.js"
+import TicketManager from "../models/DAO/ticketM.js";
 
 const prodManager = new PManager;
 const manager = new CManager;
+const ticketManager = new TicketManager;
 
 export const getCarts = async (cid) => {
     return await manager.getCartById(cid)
@@ -26,31 +28,38 @@ export const modiCantidad = async (cid, pid, cantidad) => {
     return await manager.modCantidad(cid, pid, cantidad)
 }
 
-export const purchaseBuy = async (cid) => {
-    let result = []
-    let productosNoStock = []
-    let amount = 0
-    let newProduct;
-    let quantity
-    const cart = await manager.getCartById(cid)
-    if(cart.length !== 0) {
-        cart[0].products.forEach(prodCart => {
-            quantity = prodCart.quantity
-            let stock = prodCart.producto.stock
-            newProduct = prodCart.producto         
-            if(quantity <= stock){
-                newProduct.stock = newProduct.stock - quantity
-              let prodAct = prodManager.updateP(newProduct._id, newProduct)
-              let priceProd = newProduct.price * quantity
-              amount = amount + priceProd
-            }else{
-                productosNoStock.push(prodCart)
-                console.log(productosNoStock)
-            }
-            result[0] = amount
-            console.log(result)
-            return result
-        })
-    }
+//export const purchaseBuy = async (cid) => {
+  //  let productosNoStock = []
+ //   let amount = 0
     
-}
+  //  const cart = await manager.getCartById(cid);
+
+  //  if(cart.length !== 0) {
+   //     for(let product of cart.products){
+     //       const {producto : id} = product;
+      //      const prod = await prodManager.getPById(id);
+
+      //      if(product.quantity <= prod.stock){
+       //         prod.stock = parseInt(prod.stock) - parseInt(product.quantity);
+        //      let prodAct = await prodManager.updateP(id, {stock: prod.stock});
+        //      let priceProd = prod.price * product.quantity;
+           //   amount = amount + priceProd;
+         //   }else{
+        //        productosNoStock.push(product);
+         //   }
+      //  }
+     ///   console.log(amount, "AMOUNT");
+
+//console.log(productosNoStock, "SIN STOCK");
+      //  let ticket = {
+     //       amount: amount,
+     //       code: Math.floor(Math.random() * 100000) + 1,
+      //      purchaser: req.session.user
+      ///  }
+//let ticketHecho = await ticketManager.createTicket(ticket)
+//return ticketHecho;
+
+  //  }
+
+//}
+

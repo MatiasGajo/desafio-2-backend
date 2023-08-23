@@ -1,10 +1,16 @@
-import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad} from "../services/cart.js";
+import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad, purchaseBuy} from "../services/cart.js";
 import { ticketsModel } from "../models/ticket.model.js";
 import { getid } from "../../ProductManager.js";
 import { getProductById } from "../services/product.js";
 import CustomError from "../services/errors/customError.js";
 import {EError} from '../services/errors/enums.js'
 import { generateCartErrorParam } from "../services/errors/info.js";
+import TicketManager from "../models/DAO/ticketM.js";
+import CManager from "../models/DAO/cartM.js";
+import PManager from "../models/DAO/prodM.js";
+let ticketManager = new TicketManager;
+let manager = new CManager;
+let prodManager = new PManager
 
 export const getCart = async (req, res)=>{
     let cid = req.params.cid;
@@ -72,32 +78,38 @@ export const deleteCart = async(req, res)=>{
 }
 
 export const purchaseCart = async(req,res) => {
-  let cid = req.params.cid
-  let result = []
-  let newProduct;
-  let productNoStock = []
-  let amount = 0
-  const cart = await getCarts(cid)
-  if(!cart){
-    res.status(400).send({status: "error", msg:"Carrito no encontrado"})
-  }
-  for (const cartProduct of cart.products){
-    newProduct = cartProduct.producto;
-    let quantity = cartProduct.quantity
 
-    let product = await getProductById(newProduct)
-    let stock = product.stock
+    let cid = req.params.cid
+    let productosNoStock = []
+    let amount = 0
+    let result;
+    
+    const cart = await manager.getCartById(cid);
 
-    if(quantity <= stock){
-      newProduct.stock = newProduct.stock - quantity
-    let prodAct = await updateP(newProduct._id, newProduct)
-    let priceProd = newProduct.price * quantity
-    amount = amount + priceProd
-  }else{
-      productNoStock.push(cartProduct)
-      console.log(productNoStock)
-  }
-  result[0] = amount
-  console.log(result)
-  }
+    if(cart.length !== 0) {
+        for(let product of cart.products){
+            const {producto : id} = product;
+            const prod = await prodManager.getPById(id);
+
+            if(product.quantity <= prod.stock){
+                prod.stock = parseInt(prod.stock) - parseInt(product.quantity);
+              let prodAct = await prodManager.updateP(id, {stock: prod.stock});
+              let priceProd = prod.price * product.quantity;
+              amount = amount + priceProd;
+            }else{
+                productosNoStock.push(product);
+            }
+        }
+        console.log(amount, "AMOUNT");
+
+console.log(productosNoStock, "SIN STOCK");
+        let ticket = {
+            amount: amount,
+            code: Math.floor(Math.random() * 100000) + 1,
+            purchaser: req.session.user
+        }
+  result = await ticketManager.createTicket(ticket)
+    }
+    res.send({status:"success",payload: result})
+
 }
