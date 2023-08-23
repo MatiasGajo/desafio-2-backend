@@ -8,6 +8,8 @@ export const getCarts = async (cid) => {
     return await manager.getCartById(cid)
 }
 
+
+
 export const createCarts = async () => {
     return await manager.createCart()
 }
@@ -29,14 +31,13 @@ export const purchaseBuy = async (cid) => {
     let productosNoStock = []
     let amount = 0
     let newProduct;
+    let quantity
     const cart = await manager.getCartById(cid)
     if(cart.length !== 0) {
         cart[0].products.forEach(prodCart => {
-            let quantity = prodCart.quantity
+            quantity = prodCart.quantity
             let stock = prodCart.producto.stock
-            newProduct = prodCart.producto
-            const prod = prodManager.getPById(newProduct)
-            console.log(prod)
+            newProduct = prodCart.producto         
             if(quantity <= stock){
                 newProduct.stock = newProduct.stock - quantity
               let prodAct = prodManager.updateP(newProduct._id, newProduct)
@@ -51,4 +52,5 @@ export const purchaseBuy = async (cid) => {
             return result
         })
     }
+    
 }

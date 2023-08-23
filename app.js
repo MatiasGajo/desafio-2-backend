@@ -16,6 +16,8 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import config from "./src/config/config.js";
+import router from "./src/routes/mocks.js";
+import { errorHandler } from "./src/middlewares/errorHandler.js";
 const app = express();
 
 const fileStorage = FileStore(session)
@@ -57,7 +59,8 @@ mongoose.connect(config.mongodb)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter);
 app.use("/", viewsRouter)
-
+app.use('/api/mocks', router)
+app.use(errorHandler)
 app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
 

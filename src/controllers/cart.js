@@ -1,6 +1,10 @@
-import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad, purchaseBuy } from "../services/cart.js";
+import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad} from "../services/cart.js";
 import { ticketsModel } from "../models/ticket.model.js";
 import { getid } from "../../ProductManager.js";
+import { getProductById } from "../services/product.js";
+import CustomError from "../services/errors/customError.js";
+import {EError} from '../services/errors/enums.js'
+import { generateCartErrorParam } from "../services/errors/info.js";
 
 export const getCart = async (req, res)=>{
     let cid = req.params.cid;
@@ -54,17 +58,46 @@ export const deleteCart = async(req, res)=>{
 
     let carrito = await getCarts(cid)
     if(!carrito){
-        res.status(400).send({status: "error", msg:"Carrito no encontrado"})
+        CustomError.createError({
+          name: 'error',
+          cause: generateCartErrorParam(cid),
+          code: EError.INVALID_PARAM,
+          message: 'Error al borrar el carrito'
+        })
     }
 
     carrito.products = [];
-    await carrito.save();
     res.send({status:"success", msg:"Se han borrado todos los productos del carrito"})
 
 }
 
 export const purchaseCart = async(req,res) => {
   let cid = req.params.cid
-  let result = await purchaseBuy(cid)
-  res.send({status: "success", payload: result})
+  let result = []
+  let newProduct;
+  let productNoStock = []
+  let amount = 0
+  const cart = await getCarts(cid)
+  if(!cart){
+    res.status(400).send({status: "error", msg:"Carrito no encontrado"})
+  }
+  for (const cartProduct of cart.products){
+    newProduct = cartProduct.producto;
+    let quantity = cartProduct.quantity
+
+    let product = await getProductById(newProduct)
+    let stock = product.stock
+
+    if(quantity <= stock){
+      newProduct.stock = newProduct.stock - quantity
+    let prodAct = await updateP(newProduct._id, newProduct)
+    let priceProd = newProduct.price * quantity
+    amount = amount + priceProd
+  }else{
+      productNoStock.push(cartProduct)
+      console.log(productNoStock)
+  }
+  result[0] = amount
+  console.log(result)
+  }
 }
