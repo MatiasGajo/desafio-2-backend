@@ -8,5 +8,6 @@ export default {
     sessionSecret: process.env.SESSION_SECRET,
     clientID: process.env.CLIENTID,
     clientSecret: process.env.CLIENTSECRET,
-    callbackURL: process.env.CALLBACKURL
+    callbackURL: process.env.CALLBACKURL,
+    env:process.env.ENV
 }

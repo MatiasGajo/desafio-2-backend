@@ -1,4 +1,4 @@
-import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad, purchaseBuy} from "../services/cart.js";
+import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad} from "../services/cart.js";
 import { ticketsModel } from "../models/ticket.model.js";
 import { getid } from "../../ProductManager.js";
 import { getProductById } from "../services/product.js";
@@ -19,6 +19,7 @@ export const getCart = async (req, res)=>{
       product = await getCarts(cid);
       console.log(JSON.stringify(product, null, '\t'))
     } catch (error) {
+        req.logger.error('error cart'+ error)
       res.status(400).send({ status: "error", msg: "Producto no encontrado" }) 
     }
     res.send({ status: "success", payload: product})
@@ -30,6 +31,7 @@ export const createCart = async (req, res)=>{
       newCart = await createCarts();
       res.send({ status: "success", msg: "carrito creado"})
     } catch (error) {
+        req.logger.error('error cart'+ error)
         res.status(400).send({ status: "error", msg: "error" }) 
     } 
 }

@@ -28,7 +28,7 @@ export const getAllProducts = async (req,res) => {
         }
         res.send(data)
     } catch (error) {
-        console.error(error)
+        req.logger.error('error producto'+ error)
         res.status(500).send('Error interno')
     }
 }
@@ -47,6 +47,7 @@ export const getProduct = async (req, res)=>{
             })
         }
     } catch (error) {
+        req.logger.error('error producto'+ error)
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", payload: product})
@@ -65,6 +66,7 @@ export const createProduct = async (req, res)=>{
     try {
         await addProduct(P)
     } catch (error) {
+        req.logger.error('error producto'+ error)
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", msg: "Product creado"})
@@ -84,6 +86,7 @@ export const updateProducts = async (req, res) => {
     try {
         await updateProduct(pid, P)
     } catch (error) {
+        req.logger.error('error producto'+ error)
         res.status(400).send({status: "error", error})
     }
     res.send({status: "success", msg: "Producto updateado"})
@@ -103,6 +106,7 @@ export const deleteProducts = async(req, res)=>{
             })
         }
     } catch (error) {
+        req.logger.error('error producto'+ error)
         res.status(400).send({ status: "error", msg: "error al borrar el producto" })
     }
     res.send({ status: "success", msg: "Producto borrado"})

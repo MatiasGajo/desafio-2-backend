@@ -18,6 +18,8 @@ import initializePassport from "./src/config/passport.config.js";
 import config from "./src/config/config.js";
 import router from "./src/routes/mocks.js";
 import { errorHandler } from "./src/middlewares/errorHandler.js";
+import loggerRouter from "./src/routes/logger.js";
+import { addLogger } from "./src/utils/logger.js";
 const app = express();
 
 const fileStorage = FileStore(session)
@@ -63,6 +65,8 @@ app.use('/api/mocks', router)
 app.use(errorHandler)
 app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
+app.use(addLogger)
+app.use('/api/logger', loggerRouter)
 
 const manager = new ProductManager()
 const PORT = config.port || 8081;
