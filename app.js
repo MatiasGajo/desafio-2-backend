@@ -20,6 +20,9 @@ import router from "./src/routes/mocks.js";
 import { errorHandler } from "./src/middlewares/errorHandler.js";
 import loggerRouter from "./src/routes/logger.js";
 import { addLogger } from "./src/utils/logger.js";
+import swaggerJsDoc from 'swagger-jsdoc'
+import swaggerUiExpress from 'swagger-ui-express'
+import { swaggerOptions } from "./src/config/swagger.js";
 const app = express();
 
 const fileStorage = FileStore(session)
@@ -67,6 +70,10 @@ app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
 app.use(addLogger)
 app.use('/api/logger', loggerRouter)
+
+
+const specs = swaggerJsDoc(swaggerOptions)
+app.use('/apidocs',swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 const manager = new ProductManager()
 const PORT = config.port || 8081;

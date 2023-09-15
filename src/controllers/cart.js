@@ -29,7 +29,7 @@ export const createCart = async (req, res)=>{
     let newCart; 
     try {
       newCart = await createCarts();
-      res.send({ status: "success", msg: "carrito creado"})
+      res.send({ status: "success", payload: newCart})
     } catch (error) {
         req.logger.error('error cart'+ error)
         res.status(400).send({ status: "error", msg: "error" }) 
