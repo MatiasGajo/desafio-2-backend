@@ -103,3 +103,5 @@ socketServer.on('connection', async socket => {
         socketServer.emit('productList', products)
     })
 })
+
+export {app}

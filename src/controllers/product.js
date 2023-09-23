@@ -55,6 +55,7 @@ export const getProduct = async (req, res)=>{
 
 export const createProduct = async (req, res)=>{
     let P = req.body;
+    let product;
     if (!P.title || !P.description || !P.code || !P.price || !P.stock || !P.category) {
         CustomError.createError({
             name: 'Error',
@@ -64,12 +65,12 @@ export const createProduct = async (req, res)=>{
         })
     }
     try {
-        await addProduct(P)
+       product = await addProduct(P)
     } catch (error) {
         req.logger.error('error producto'+ error)
         res.status(400).send({status: "error", error})
     }
-    res.send({status: "success", msg: "Product creado"})
+    res.send({status: "success", payload: product})
 }
 
 export const updateProducts = async (req, res) => {
