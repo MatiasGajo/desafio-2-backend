@@ -32,3 +32,11 @@ export const getUserByEmail = async (email) => {
 export const updateUsers = async (user) => {
     return await userM.updateUser(user)
 }
+
+export const getUserById = async (uid) => {
+    return await userM.getById(uid)
+}
+
+export const updateUserComplete = async (uid, user) => {
+    return await userM.updateUserComplete(uid, user)
+}

@@ -26,23 +26,23 @@ viewsRouter.get('/', (req, res) => {
 viewsRouter.get("/products",isUser, products)
 
 
-viewsRouter.get("/realtimeproducts",isAdmin, productRealTimeGet)
+viewsRouter.get("/realtimeproducts", productRealTimeGet)
 
 viewsRouter.post('/realtimeproducts', productRealTimePost)
 
 viewsRouter.delete('/realtimeproducts/:pid', productRealTimeDelete)
 
-viewsRouter.get('/register',(req, res) => {
-    res.render('register',{})
-})
+// viewsRouter.get('/register',(req, res) => {
+//     res.render('register',{})
+// })
 
-viewsRouter.post('/register', registerPost)
+// viewsRouter.post('/register', registerPost)
 
-viewsRouter.get('/login', (req, res) => {
-    res.render('login', {})
-})
+// viewsRouter.get('/login', (req, res) => {
+//     res.render('login', {})
+// })
 
-viewsRouter.post('/login', loginPost)
+// viewsRouter.post('/login', loginPost)
 
 viewsRouter.get('/logout',(req, res) => {
     req.session.destroy(error => {
@@ -52,20 +52,20 @@ viewsRouter.get('/logout',(req, res) => {
 
 viewsRouter.get('/profile', profileGet)
 
-viewsRouter.get('/restore', (req, res )=> {
-    res.render('restore-password',{})
-})
+// viewsRouter.get('/restore', (req, res )=> {
+//     res.render('restore-password',{})
+// })
 
-viewsRouter.post('/restore', restorePost)
+// viewsRouter.post('/restore', restorePost)
 
 
 // PASSPORT 
 
-viewsRouter.get('/registerr', (req, res) => {
+viewsRouter.get('/register', (req, res) => {
     res.render('register',{})
 })
 
-viewsRouter.post('/registerr', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req, res) => {
+viewsRouter.post('/register', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req, res) => {
     res.render('login',{})
 })
 
@@ -73,13 +73,14 @@ viewsRouter.get('/failregister', async (req, res) => {
     res.render('register-error',{})
 })
 
-viewsRouter.get('/loginn', (req,res) => {
+viewsRouter.get('/login', (req,res) => {
     res.render('login',{})
 })
 
-viewsRouter.post('/loginn', passport.authenticate('login', {failureRedirect: 'faillogin'}), async (req, res) => {
+viewsRouter.post('/login', passport.authenticate('login', {failureRedirect: 'faillogin'}), async (req, res) => {
     if(!req.user) return res.render('login-error',{})
     req.session.user = req.user.email
+    req.session.rol = req.user.rol
     res.render('datos', {user: req.session.user})
 })
 

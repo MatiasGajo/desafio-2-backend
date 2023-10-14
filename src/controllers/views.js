@@ -69,8 +69,9 @@ export const loginPost = async (req, res) => {
         return u.email == user.email && isValidPassword(u, user.password)
     })
     if(userFound){
+        console.log(userFound)
         let result = new UserDTO(userFound)
-     //   console.log(result)
+        console.log(result)
         req.session.user = user.email
         req.session.rol = user.rol
         if(result.rol == 'admin'){
@@ -84,11 +85,10 @@ export const loginPost = async (req, res) => {
 }
 
 export const profileGet = async (req, res) => {
-    let email = req.session.user
-    let user = await getUserByEmail(email)
+  //  let user = await getUserByEmail(email)
 
-    if(user){
-        res.render('datos', {user})
+    if(req.session.user){
+        res.render('datos', {user: req.session.user})
     }else{
         res.redirect('/login')
     }

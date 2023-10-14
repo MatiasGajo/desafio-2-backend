@@ -34,6 +34,7 @@ const initializePassport = () => {
             return u.email == username && isValidPassword(u, password)
         })
         if(userFound){
+            userFound.last_connection = new Date()
             console.log(userFound)
             delete userFound.password
             return done(null, userFound)

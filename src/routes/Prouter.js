@@ -1,16 +1,17 @@
 import { Router } from "express";
 import { getAllProducts, getProduct, createProduct, updateProducts, deleteProducts } from "../controllers/product.js";
 import { addLogger } from "../utils/logger.js";
+import { isUser, isAdmin } from "../middlewares/auth.js";
 const Prouter = Router()
 
-Prouter.get('/',addLogger, getAllProducts);
+Prouter.get('/',addLogger,isAdmin, getAllProducts);
 
-Prouter.get("/:pid", getProduct);
+Prouter.get("/:pid",isAdmin, getProduct);
 
-Prouter.post("/", createProduct);
+Prouter.post("/",isAdmin, createProduct);
 
-Prouter.put("/:pid", updateProducts);
+Prouter.put("/:pid",isAdmin, updateProducts);
 
-Prouter.delete("/:pid", deleteProducts);
+Prouter.delete("/:pid",isAdmin, deleteProducts);
 
 export default Prouter;

@@ -23,6 +23,7 @@ import { addLogger } from "./src/utils/logger.js";
 import swaggerJsDoc from 'swagger-jsdoc'
 import swaggerUiExpress from 'swagger-ui-express'
 import { swaggerOptions } from "./src/config/swagger.js";
+import userRouter from "./src/routes/userRouter.js";
 const app = express();
 
 const fileStorage = FileStore(session)
@@ -70,6 +71,7 @@ app.use('/api/p', Prouter);
 app.use('/api/c', Crouter);
 app.use(addLogger)
 app.use('/api/logger', loggerRouter)
+app.use('/api/user', userRouter)
 
 
 const specs = swaggerJsDoc(swaggerOptions)

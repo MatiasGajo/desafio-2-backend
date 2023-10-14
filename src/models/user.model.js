@@ -9,7 +9,11 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true},
     password: String,
     age: Number,
-    rol: { type: String, default: 'user'}
+    rol: { type: String, default: 'user'},
+    last_connection: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 export const userModel = mongoose.model(userCollection, userSchema)

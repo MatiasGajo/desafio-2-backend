@@ -9,9 +9,18 @@
             <h5><span>Imagen: </span>{{this.thumbnail}}</h5>
             <h5><span>Stock: </span>{{this.stock}}</h5>
             <h5><span>Código: </span>{{this.code}}</h5>
-            <button disabled="disabled">Agregar al carrito</button>
+            <button data-product-id="{{this._id}}"=>Agregar al carrito</button>
         </div>
     {{/each}}
+        <div>
+            <button onclick="crearCarrito()">Crear carrito</button>
+            <h2>Carrito</h2>
+            <ul id="carrito">
+
+            </ul>
+            <button onclick="borrarCarrito()">Borrar carrito</button>
+    </div>
+    <button onclick="comprarCarrito()">Comprar carrito</button>
     <div class="boton">
         {{#if hasPrevPage}}
             <a href="/products/?page={{prevPage}}" ><button>Anterior</button></a>
@@ -20,6 +29,7 @@
             <a href="/products/?page={{nextPage}}" ><button>Siguiente</button></a>
         {{/if}}
     </div>
-    
 </div>
 
+
+<script src="/js/products.js"></script>

@@ -69,6 +69,16 @@ async updateUser(email, newPassword){
     }
     return result;
 }
+
+async updateUserComplete(uid, user){
+    let result;
+    try {
+        result = await this.model.updateOne({_id: uid}, user);
+        return result;
+    } catch (error) {
+        console.log(error)
+    }
+}
 }
 
 export default UserManager;
