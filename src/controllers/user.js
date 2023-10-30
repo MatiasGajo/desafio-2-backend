@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, updateUserComplete } from "../services/views.js";
+import { getAllUsers, getUserById, updateUserComplete } from "../services/viewsServices.js";
 
 export const getUsers = async (req, res) => {
     try {

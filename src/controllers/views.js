@@ -1,7 +1,7 @@
 import { Productsmodel } from "../models/prod.model.js";
 import { socketServer } from "../../app.js";
-import { addProduct, deleteProduct } from "../services/product.js";
-import { getPro, getUser, createUsers, getAllUsers, getUserByEmail, updateUsers } from "../services/views.js";
+import { addProduct, deleteProduct } from "../services/productServices.js";
+import { getPro, getUser, createUsers, getAllUsers, getUserByEmail, updateUsers } from "../services/viewsServices.js";
 import { createHash, isValidPassword } from "../../utils.js";
 import UserDTO from "../models/DTO/userDTO.js";
 export const products = async (req, res) => {

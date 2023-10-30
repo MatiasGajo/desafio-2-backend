@@ -1,4 +1,4 @@
-import { getCategories, getProducts, getProductById, addProduct, updateProduct, deleteProduct } from "../services/product.js";
+import { getCategories, getProducts, getProductById, addProduct, updateProduct, deleteProduct } from "../services/productServices.js";
 import CustomError from "../services/errors/customError.js";
 import { EError } from "../services/errors/enums.js";
 import { generateProductErrorInfo, generateProductErrorParam } from "../services/errors/info.js";

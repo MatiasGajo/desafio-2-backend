@@ -1,7 +1,7 @@
-import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad} from "../services/cart.js";
+import { getCarts, createCarts, addProductCart, deleteProducts, modiCantidad} from "../services/cartServices.js";
 import { ticketsModel } from "../models/ticket.model.js";
-import { getid } from "../../ProductManager.js";
-import { getProductById } from "../services/product.js";
+import { getid } from "../models/DAO/ProductManager.js";
+import { getProductById } from "../services/productServices.js";
 import CustomError from "../services/errors/customError.js";
 import {EError} from '../services/errors/enums.js'
 import { generateCartErrorParam } from "../services/errors/info.js";

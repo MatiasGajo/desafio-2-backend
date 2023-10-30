@@ -1,7 +1,7 @@
 import { Router } from "express";
-import ProductManager from '../../ProductManager.js';
+import ProductManager from '../models/DAO/ProductManager.js';
 import { validarProd } from "../utils/index.js";
-import { getid } from "../../ProductManager.js";
+import { getid } from "../models/DAO/ProductManager.js";
 
  let productRouter = Router();
 

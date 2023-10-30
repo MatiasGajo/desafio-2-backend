@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import fs from 'fs';
-import ProductManager from '../../ProductManager.js';
+import ProductManager from '../models/DAO/ProductManager.js';
 import CManager from '../models/DAO/cartM.js';
 import PManager from '../models/DAO/prodM.js';
 import { Productsmodel } from '../models/prod.model.js';
