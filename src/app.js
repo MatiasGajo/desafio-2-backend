@@ -1,29 +1,29 @@
 import express from "express";
 import mongoose from "mongoose";
-import productRouter from './src/routes/productFileRouter.js';
-import cartRouter from './src/routes/cartFileRouter.js';
+import productRouter from './routes/productFileRouter.js';
+import cartRouter from './routes/cartFileRouter.js';
 import handlebars from 'express-handlebars';
-import viewsRouter from './src/routes/views.js';
+import viewsRouter from './routes/views.js';
 import { Server } from 'socket.io';
-import ProductManager from "./src/models/DAO/ProductManager.js";
-import { getid } from "./src/models/DAO/ProductManager.js";
-import Prouter from "./src/routes/productRouter.js";
-import Crouter from "./src/routes/cartRouter.js";
-import __dirname from "./utils.js";
+import ProductManager from "./models/DAO/ProductManager.js";
+import { getid } from "./models/DAO/ProductManager.js";
+import Prouter from "./routes/productRouter.js";
+import Crouter from "./routes/cartRouter.js";
+import __dirname from "../utils.js";
 import session from "express-session";
 import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import initializePassport from "./src/config/passport.config.js";
-import config from "./src/config/config.js";
-import router from "./src/routes/mocks.js";
-import { errorHandler } from "./src/middlewares/errorHandler.js";
-import loggerRouter from "./src/routes/logger.js";
-import { addLogger } from "./src/utils/logger.js";
+import initializePassport from "./config/passport.config.js";
+import config from "./config/config.js";
+import router from "./routes/mocks.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
+import loggerRouter from "./routes/logger.js";
+import { addLogger } from "./utils/logger.js";
 import swaggerJsDoc from 'swagger-jsdoc'
 import swaggerUiExpress from 'swagger-ui-express'
-import { swaggerOptions } from "./src/config/swagger.js";
-import userRouter from "./src/routes/userRouter.js";
+import { swaggerOptions } from "./config/swagger.js";
+import userRouter from "./routes/userRouter.js";
 const app = express();
 
 const fileStorage = FileStore(session)

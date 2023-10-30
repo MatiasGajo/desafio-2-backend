@@ -5,8 +5,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "mocha test/Views.test.js --timeout 10000"
   },
   "keywords": [],

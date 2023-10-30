@@ -1,5 +1,5 @@
 import { Productsmodel } from "../models/prod.model.js";
-import { socketServer } from "../../app.js";
+import { socketServer } from "../app.js";
 import { addProduct, deleteProduct } from "../services/productServices.js";
 import { getPro, getUser, createUsers, getAllUsers, getUserByEmail, updateUsers } from "../services/viewsServices.js";
 import { createHash, isValidPassword } from "../../utils.js";

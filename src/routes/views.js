@@ -4,7 +4,7 @@ import ProductManager from '../models/DAO/ProductManager.js';
 import CManager from '../models/DAO/cartM.js';
 import PManager from '../models/DAO/prodM.js';
 import { Productsmodel } from '../models/prod.model.js';
-import { socketServer } from '../../app.js';
+import { socketServer } from '../app.js';
 import UserManager from '../models/DAO/userM.js';
 import { createHash, isValidPassword } from '../../utils.js';
 import passport from 'passport';
